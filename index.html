@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Management System v1.0</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; padding: 40px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
+        h1 { color: #1a73e8; text-align: center; }
+        .question-box { margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .question-text { font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; }
+        label { display: block; margin: 8px 0; cursor: pointer; padding: 10px; border-radius: 5px; background: #fafafa; }
+        label:hover { background: #e8f0fe; }
+        button { width: 100%; background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #1557b0; }
+        #score-display { text-align: center; font-size: 1.5rem; font-weight: bold; margin-top: 20px; color: #34a853; }
+    </style>
+</head>
+<body>
 
+<div class="card">
+    <h1>Final Examination</h1>
+    <div id="quiz-container">
+        </div>
+    <button onclick="calculateScore()">Submit My Exam</button>
+    <div id="score-display"></div>
+</div>
+
+<script>
+    // 1. DATA: This is our simple "Database" for now
+    const myQuestions = [
+        {
+            question: "What is the capital of France?",
+            answers: ["London", "Berlin", "Paris", "Madrid"],
+            correct: 2 // Paris is at index 2 (counting from 0)
+        },
+        {
+            question: "Which language is used for web styling?",
+            answers: ["Python", "HTML", "CSS", "SQL"],
+            correct: 2
+        },
+        {
+            question: "What is 10 x 10?",
+            answers: ["20", "100", "110", "1000"],
+            correct: 1
+        }
+    ];
+
+    // 2. LOGIC: Put the questions on the screen
+    function loadQuiz() {
+        const container = document.getElementById('quiz-container');
+        let html = '';
+
+        myQuestions.forEach((q, index) => {
+            html += `
+                <div class="question-box">
+                    <p class="question-text">${index + 1}. ${q.question}</p>
+                    ${q.answers.map((ans, i) => `
+                        <label>
+                            <input type="radio" name="question${index}" value="${i}"> ${ans}
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    // 3. LOGIC: Check how many are right
+    function calculateScore() {
+        let score = 0;
+        myQuestions.forEach((q, index) => {
+            const selector = `input[name="question${index}"]:checked`;
+            const userAnswer = (document.querySelector(selector) || {}).value;
+
+            if (userAnswer == q.correct) {
+                score++;
+            }
+        });
+
+        const display = document.getElementById('score-display');
+        display.innerHTML = `You scored ${score} out of ${myQuestions.length}!`;
+    }
+
+    // Run the function to show the quiz immediately
+    loadQuiz();
+</script>
+
+</body>
+</html>
